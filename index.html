@@ -1,0 +1,53 @@
+<html>
+<head>
+<script type="text/javascript" src="soundmanager2.js"></script>
+<script type="text/javascript">
+soundManager.url = 'soundmanager2_flash_xdomain/';
+</script> 
+<script type="text/javascript" language="javascript">
+var height = 200;
+var width = 600;
+var sound = null;
+w=1;
+
+function initFftSpectrum(){
+	for (var i=0; i<256; i++) {
+		var eqs = sound.waveformData.left[i]*(height);
+		drawSpectrum(w,eqs,2+(w+2)*i);
+	}
+}
+
+function drawSpectrum(w,h,x){
+	var fft = document.getElementById('fft').getContext("2d");
+	clear(x,w,h);
+	fft.fillStyle = "rgba(249,0,254,0.6)";
+	fft.fillRect(x,height-h,w,h);
+}
+
+function clear(cx,cw,ch){
+	var fft = document.getElementById('fft').getContext("2d");
+	fft.fillStyle = "rgba(0,0,0,1)";
+	fft.fillRect(cx,0,width,height*2);
+}
+
+soundManager.onload = function() {
+	
+	document.getElementById('button').style.display = 'block';
+	
+	sound = soundManager.createSound({
+ 		id:'demosound',
+ 		url:'http://freshly-ground.com/misc/music/20060826%20-%20Armstrong.mp3',
+		whileplaying: function() {
+ 			initFftSpectrum();
+ 		}
+	});
+}
+</script>
+</head>
+<body>
+<button onClick="soundManager.play('demosound');" style="display:none" id="button">Start</button>
+<canvas id="fft" width="600" height="400" style="display:block; background:black">
+Fallback content, in case the browser does not support Canvas.
+</canvas>
+</body>
+</html>
